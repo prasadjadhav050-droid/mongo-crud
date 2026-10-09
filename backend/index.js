@@ -5,7 +5,7 @@ const cors = require("cors")
 const app = express()
 
 app.use(express.json())
-app.use(cors({ origin: "http://localhost:5173" }))
+app.use(cors({ origin: process.env.NODE_ENV === "development" ? process.env.LOCAL_URL : process.env.LIVE_URL }))
 
 app.use("/blog", require("./routes/blog.routes"))
 mongoose.connect(process.env.DATABASE_URL)

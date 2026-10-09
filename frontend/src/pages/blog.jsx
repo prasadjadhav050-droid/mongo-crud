@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Link } from 'react-router-dom';
@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 const Blog = () => {
   const [allblogs, setAllblogs] = useState([])
   const [selectedBlog, setSelectedBlog] = useState(null)
- const API_URL=" http://localhost:5000/blog"
+  const API_URL = import.meta.env.VITE_NODE_ENV === "development" ? import.meta.env.VITE_LOCAL_URL : import.meta.env.VITE_LIVE_URL
   const schema = z.object({
     title: z.string().min(3),
     desc: z.string().min(3, 'Minimum 3 characters'),
@@ -24,11 +24,11 @@ const Blog = () => {
     try {
       console.log(blogData);
       if (selectedBlog) {
-        updateBlog(selectedBlog._id,blogData)
-        reset({title:"",desc:"",hero:""})
+        updateBlog(selectedBlog._id, blogData)
+        reset({ title: "", desc: "", hero: "" })
         selectedBlog(null)
       } else {
-        
+
         createBlog(blogData)
         reset();
       }
@@ -42,53 +42,53 @@ const Blog = () => {
     'is-invalid': errors[key],
     'is-valid': touchedFields[key] && !errors[key],
   });
-const createBlog=async(blogData)=>{
-  try {
-  await axios.post(`${API_URL}/create`,blogData)
-    toast.success("blog create success")
-    readBlog()
-  } catch (error) {
-    console.log(error);
-  toast.error("somthing went wrong")
+  const createBlog = async (blogData) => {
+    try {
+      await axios.post(`${API_URL}/create`, blogData)
+      toast.success("blog create success")
+      readBlog()
+    } catch (error) {
+      console.log(error);
+      toast.error("somthing went wrong")
+    }
   }
-}
 
-const readBlog=async()=>{
-  try {
-     const {data}= await axios.get(API_URL)
-   console.log(data);  
-   setAllblogs(data.result)
-    // toast.success("blog read success")
-  } catch (error) {
-    console.log(error);
-  toast.error("somthing went wrong")
+  const readBlog = async () => {
+    try {
+      const { data } = await axios.get(API_URL)
+      console.log(data);
+      setAllblogs(data.result)
+      // toast.success("blog read success")
+    } catch (error) {
+      console.log(error);
+      toast.error("somthing went wrong")
+    }
   }
-}
-const updateBlog=async(id,blogData)=>{
-  try {
-    await axios.put(`${API_URL}/modify/${id}`,blogData)
-    
-    toast.success("blog update success")
+  const updateBlog = async (id, blogData) => {
+    try {
+      await axios.put(`${API_URL}/modify/${id}`, blogData)
+
+      toast.success("blog update success")
+      readBlog()
+    } catch (error) {
+      console.log(error);
+      toast.error("somthing went wrong")
+    }
+  }
+  const deleteBlog = async (id) => {
+    try {
+      await axios.delete(`${API_URL}/remove/${id}`)
+
+      toast.success("blog delete success")
+      readBlog()
+    } catch (error) {
+      console.log(error);
+      toast.error("somthing went wrong")
+    }
+  }
+  useEffect(() => {
     readBlog()
-  } catch (error) {
-    console.log(error);
-  toast.error("somthing went wrong")
-  }
-}
-const deleteBlog=async(id)=>{
-  try {
-    await axios.delete(`${API_URL}/remove/${id}`)
-  
-    toast.success("blog delete success")
-    readBlog()
-  } catch (error) {
-    console.log(error);
-  toast.error("somthing went wrong")
-  }
-}
-useEffect(()=>{
-  readBlog()
-},[])
+  }, [])
   return (
     <div className="container">
       <div className="row">
@@ -131,26 +131,26 @@ useEffect(()=>{
                   />
                   <div className="invalid-feedback">{errors.hero?.message}</div>
                 </div>
-        {
-          selectedBlog
-                        ?
-                        <div>
-                          <button type="submit" className="btn btn-warning w-100 mt-3">
-                          update Blog
-                        </button>
-                          <button onClick={()=>{
-                            reset({title:"",desc:"",hero:""})
-                            setSelectedBlog(null)
-                          }} type="button" className="btn btn-outline-secondary w-100 mt-3">
+                {
+                  selectedBlog
+                    ?
+                    <div>
+                      <button type="submit" className="btn btn-warning w-100 mt-3">
+                        update Blog
+                      </button>
+                      <button onClick={() => {
+                        reset({ title: "", desc: "", hero: "" })
+                        setSelectedBlog(null)
+                      }} type="button" className="btn btn-outline-secondary w-100 mt-3">
                         <i class="bi bi-x-square"></i>
-                        </button>
-                        </div>
-                        :
-                        <button type="submit" className="btn btn-primary w-100 mt-3">
-                          Create Blog
-                        </button>
+                      </button>
+                    </div>
+                    :
+                    <button type="submit" className="btn btn-primary w-100 mt-3">
+                      Create Blog
+                    </button>
 
-        }
+                }
               </form>
 
               <p className="text-center mt-3">
@@ -178,22 +178,22 @@ useEffect(()=>{
                 <td>{item.title}</td>
                 <td>{item.desc}</td>
                 <td>
-                  
-                    <img src={item.hero} height={100} alt="" />
-                  
+
+                  <img src={item.hero} height={100} alt="" />
+
                 </td>
                 <td>
-                  
-                    <button onClick={()=>{
-                      reset(item)
-                      setSelectedBlog(item)
-                    }} type="button" class="btn btn-primary">edit</button>
-                    <button onClick={()=>deleteBlog(item._id)} type="button" class="btn btn-warning">delete</button>
-                  
+
+                  <button onClick={() => {
+                    reset(item)
+                    setSelectedBlog(item)
+                  }} type="button" class="btn btn-primary">edit</button>
+                  <button onClick={() => deleteBlog(item._id)} type="button" class="btn btn-warning">delete</button>
+
                 </td>
-              </tr> )
+              </tr>)
             }
-           
+
           </tbody>
         </table>
       }
