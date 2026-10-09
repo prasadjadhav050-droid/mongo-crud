@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 const Blog = () => {
   const [allblogs, setAllblogs] = useState([])
   const [selectedBlog, setSelectedBlog] = useState(null)
-  const API_URL = import.meta.env.VITE_NODE_ENV === "development" ? import.meta.env.VITE_LOCAL_URL : import.meta.env.VITE_LIVE_URL
+  const API_URL = import.meta.env.VITE_NODE_ENV === "development" ? import.meta.env.VITE_LOCAL_URL : import.meta.env.VITE_LOCAL_URL
   const schema = z.object({
     title: z.string().min(3),
     desc: z.string().min(3, 'Minimum 3 characters'),
@@ -55,7 +55,7 @@ const Blog = () => {
 
   const readBlog = async () => {
     try {
-      const { data } = await axios.get(API_URL)
+      const { data } = await axios.get(`${API_URL}/blog`)
       console.log(data);
       setAllblogs(data.result)
       // toast.success("blog read success")
