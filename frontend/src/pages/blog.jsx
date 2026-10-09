@@ -17,6 +17,7 @@ const Blog = () => {
   });
 
   const { handleSubmit, register, reset, formState: { errors, touchedFields } } = useForm({
+
     resolver: zodResolver(schema)
   });
 
